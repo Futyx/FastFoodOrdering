@@ -7,7 +7,9 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\OrderList;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,20 +26,49 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/user/{name}', function (string $name) {
+    return 'Number '.$name;
+});
 
-Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menus.show');
+Route::get('/cat/{name}', function (string $name) {
+    return 'category is '.$name;
+}); 
 
-Route::post('/menu/{id}', [OrderController::class, 'store'])->name('menus.cart');
+
+
+Route::get('/home', [CategoryController::class, 'index'])->name('home');
+
+Route::get('/menu/{name}', [MenuController::class, 'show'])->name('menus.show');
+
+Route::post('/menu/{name}', [OrderController::class, 'store'])->name('menus.cart');
+
+Route::group(['prefix' =>'order'], function(){
+    
+        Route::get('/user/{email}/');
+    
+});
 
 Route::get('/order/list', [OrderController::class, 'show'])->name('order.show');
+Route::post('/order/list', [OrderController::class, 'create'])->name('order.save');
+Route::get('/order/info', [OrderController::class, 'index'])->name('order.info');
+
+
+// Route::get('/order', OrderList::class)->name('order');  
+
+
+
+// Route::post('/order/remove/{id}', [OrderController::class, 'remove'])->name('order.remove');
+
 
 Route::get('/orders/list', [OrderController::class, 'show'])->name('orders.show');
 
-Route::post('/orders/list', [OrderController::class, 'store'])->name('order.store');
+Route::post('/orders/list', [OrderController::class, 'store'])->name('orders.store');
 
-Route::get('/home', [CategoryController::class, 'index'])->name('home.category');
 
+
+
+
+Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
 
 
 

@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Menu;
 use Illuminate\Http\Request;
 
-class MenuController extends Controller
+class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('payment');
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create($userID)
+    public function create()
     {
-        $userID = auth()->user()->id;
+        //
     }
 
     /**
@@ -35,19 +33,9 @@ class MenuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $name)
+    public function show(string $id)
     {
-
-        $category = Category::where('name', '=', $name)->first();
-
-         
-    
-        $menu =  Menu::where('category_id', $category->id)->get();
-
-        $menus = $menu->all();
-
-
-        return view('menu.list', compact('menus', 'category'));
+        //
     }
 
     /**

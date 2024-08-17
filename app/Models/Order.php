@@ -12,12 +12,14 @@ class Order extends Model
     protected $guarded = ['id'];
     
     protected $fillable = [
-        'menu_id',
+        'customer_id',
+        'user_id',
         'status',
+        'payment_status',
     ];
     public function menus(){
 
-        return $this->belongsToMany(Menu::class,'id', 'menu_id');
+        return $this->belongsToMany(Menu::class);
         
     }
 

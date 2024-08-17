@@ -46,7 +46,6 @@ class CreateCart extends Component
 
         foreach ($this->menus as $menu) {
 
-            
             $quantity = $this->quantities[$menu->id] ?? 0;
 
             if ($quantity > 0) {
@@ -63,12 +62,11 @@ class CreateCart extends Component
         $sessionKey = 'cart_items' . $userId; 
         Session::put($sessionKey, $cartItems);  
 
-        // Session::push('user_id', $cartItems);
-
         $session = session($sessionKey);
-        // dd($session);
 
         session()->flash('success', 'سفارش شما با موفقیت اضافه شد');
+
+        
 
 
 

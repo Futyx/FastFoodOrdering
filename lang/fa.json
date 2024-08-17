@@ -7,6 +7,7 @@
     "Already registered?": "قبلا ثبت نام کرده اید؟",
     "Are you sure you want to delete your account?": "آیا از حذف حساب خود مطمئن هستید؟",
     "Cancel": "لغو",
+    "Home": "خانه",
     "Click here to re-send the verification email.": "اینجا را کلیک کنید تا ایمیل تایید برای شما مجددا ارسال شود.",
     "Confirm": "تایید",
     "Confirm Password": "تکرار رمزعبور",
@@ -78,4 +79,5 @@
     "You are receiving this email because we received a password reset request for your account.": "شما این ایمیل را به دلیل درخواست رمزعبور جدید دریافت کرده‌اید.",
     "You're logged in!": "شما وارد شده‌اید!",
     "Your email address is unverified.": "ایمیل شما تایید نشده است."
+    
 }

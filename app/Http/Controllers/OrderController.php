@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,19 +16,49 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = DB::table('orders')->get();
 
         $id = auth()->user()->id;
 
-        return view('orders.show', ['orders' => $orders, 'userId' => $id]);
+        $orders = Order::where('user_id', $id)
+            ->where('status', 'new')
+            ->get();
+
+
+
+        return view('order.info', ['orders' => $orders, 'userId' => $id]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $order = new Order;
+        $cartItems = $request->session()->get('cart_items1', []);
+
+        if (empty($cartItems)) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
+        $order = Order::create([
+            'user_id' => Auth::id(),
+        ]);
+
+        $menuIds = [];
+
+        foreach ($cartItems as $item) {
+            $menu = Menu::where('name', $item['name'])->first();
+            // echo $menu->name . ' ' .$menu->id;
+            if ($menu) {
+                $menuIds[] = $menu->id;
+            } else {
+                return redirect()->back()->with('error', "Menu item '{$item['name']}' not found.");
+            }
+        }
+        if (!empty($menuIds)) {
+
+            $order->menus()->attach($menuIds);
+        }
+        return redirect()->route('order.info')->with('success', 'سفارش شما با موفقیت ثبت شد.');
     }
 
     /**
@@ -34,32 +66,79 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $menuName = $request->input('menu_name');
-        $menuPrice = $request->input('menu_price');
-        $menuItem = DB::table('menus')->where('name', $menuName)->first();
-        $randomId = rand(10, 90);
-        $rowId = uniqid($randomId, true);
-        $userId = auth()->user()->id;
+
+        dd($request->session()->get('cart_items1', []));
+
+        return view('orders.show', ['orders' => $orders, 'userId' => $id]);
+    }
+
+    public function remove(Request $request, $id)
+    {
+
+        $cart = session()->get('cart_items1', []);
 
 
-        dd($menuName);
+        if (isset($cart[$id])) {
 
-        // if ($request) {
+            unset($cart[$id]);
 
-        //     Cart::add([
-        //         'id' => $menuItem->id,
-        //         'name' => $menuName,
-        //         'qty' => 1,
-        //         'price' => $menuPrice,
-        //         'user_id' => $userId,
-        //     ]);
-        // }
+            session()->put('cart_items1', $cart);
+        }
+
+        // Optionally, you may want to redirect back to the cart or provide feedback  
+        return redirect()->back()->with('success', 'Item removed from cart');
+    }
+
+    public function deleteItem(Request $request, $id)
+    {
+
+        // $id = $request->input('item_id');  
+
+        // // Retrieve the items from the session  
+        // $cartItems = $request->session()->get('cart_items1', []);  
+
+        // // Check if the item exists in the cart  
+        // $itemFound = false;  
+        // $cartItems = collect($cartItems)->filter(function ($item) use ($id, &$itemFound) {  
+        //     if ($item['id'] == $id) {  
+        //         $itemFound = true; // Mark that the item was found  
+        //         return false;      // Skip this item  
+        //     }  
+        //     return true; // Keep this item  
+        // })->values()->toArray();  
+
+        // // Update the session without the deleted item  
+        // $request->session()->put('cart_items1', $cartItems);  
+
+        // // Redirect back with a success or error message  
+        // if ($itemFound) {  
+        //     return redirect()->back()->with('success', "Deleted item with ID: " . $id);  
+        // }  
+
+        // return redirect()->back()->with('error', "Item not found.");  
 
 
-        // $cartCount = Cart::content();
+        // // Retrieve the cart items from the session  
 
-        // dd($cartCount);
+        // // Find the item to delete  
+        // // $selectedItem = collect($cartItems)->firstWhere('id', $id);
 
+        // // // Check if the item is found  
+        // // if ($selectedItem) {
+        // //     $itemName = $selectedItem['name'];
+
+        // //     // Remove the item from the cart  
+        // //     $cartItems = collect($cartItems)->reject(function ($item) use ($id) {
+        // //         return $item['id'] === $id;
+        // //     })->values()->toArray();
+
+        // //     // Update the session with the new cart items array  
+        // //     $request->session()->put('cart_items1', $cartItems);
+
+        // //     return "Deleted item: " . $itemName;
+        // // }
+
+        // // return "Item not found.";
     }
 
     /**
@@ -72,32 +151,27 @@ class OrderController extends Controller
         $sessionKey = 'cart_items' . $userId;
         $cartItems = session($sessionKey, []);
 
-  
-        
 
-         return view('order.list', compact('cartItems','user')); 
+
+        return view('order.list', compact('cartItems', 'user'));
     }
-    public function showaorders()
-    {
 
 
 
-        // $id=1;
-        // $order = Order::findOrFail($id);
-
-        // dd($order);
-        // $userId = auth()->user()->id;
-        // return redirect()->route('orders.show', compact('order'));  
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request)
     {
-        //
-    }
 
+        $cartItems = session('cart_items', []);
+
+        foreach ($cartItems as $item) {
+
+            $selectedItem = collect($item)->firstWhere('id', $id);
+        }
+    }
     /**
      * Update the specified resource in storage.
      */

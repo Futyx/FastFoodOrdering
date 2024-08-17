@@ -32,7 +32,7 @@ class Menu extends Model
     }
     public function orders(){
 
-        return $this->belongsToMany(Order::class, 'id','order_id');
+        return $this->belongsToMany(Order::class);
         
     }
     

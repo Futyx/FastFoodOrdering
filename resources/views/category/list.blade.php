@@ -13,7 +13,7 @@
 
                     @foreach($categories as $category)
                     <div class="p-4 text-white ">
-                        <a href="{{ route('menus.show', $category->id) }}" class="rounded-full transition hover:text-gray-800 hover:bg-purple-500 font-semibold p-2 border-1 ">
+                        <a href="{{ route('menus.show', ['name' => $category->name]) }}" class="rounded-full transition hover:text-gray-800 hover:bg-purple-500 font-semibold p-2 border-1 ">
                             {{ $category->name}}</a>
                     </div>
                     @endforeach

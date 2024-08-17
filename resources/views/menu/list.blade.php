@@ -6,9 +6,9 @@
 
 
             <div class="flex justify-start items-start pr-8">
+                
 
                 <fieldset class="text-xl w-1/2 border-2 border-indigo-400 shadow-neon rounded-lg px-4 py-2">
-                    @livewire('order-counter')
 
 
                     <legend class="px-1 font-semibold  text-white"> {{ $category->name}}</legend>
@@ -17,14 +17,9 @@
                         @livewire('create-cart', ['menus'=> $menus])
 
                     </div>
-
-
-
+                    
 
                 </fieldset>
-
-
-
             </div>
         </div>
     </div>
